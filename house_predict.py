@@ -1,26 +1,23 @@
 import streamlit as st
 import joblib
 import pandas as pd
+import numpy as np 
 from sklearn.preprocessing import StandardScaler
-
-
 from sklearn.preprocessing import LabelEncoder
 video=f"""
-   <style>
-  .vid{{
-      position: fixed;
-	  right: 0;
-	  bottom: 0;
-      min-width: 100%; 
-	  min-height: 100%;
-    
-  }}
-   </style>
-  
- <video autoplay loop muted class="vid">
- <source src="https://cdn.discordapp.com/attachments/1294905019388395563/1297964135580958801/7578544-hd_1280_720_30fps.mp4?ex=6717d6cc&is=6716854c&hm=a786b4c450fd04541f41c6dc100b399d6c5f80fb07f4a44be031fae4fad8d34f&">
+    <style>
+        .vid{{
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%; 
+            min-height: 100%; 
+        }}
+    </style>
 
- </video>
+    <video autoplay loop muted class="vid">
+        <source src="https://cdn.discordapp.com/attachments/1294905019388395563/1297964135580958801/7578544-hd_1280_720_30fps.mp4?ex=6719d10c&is=67187f8c&hm=2c07f8106b7345545179cfeb2012daeb9f0df675ad25ecd0d55c26baa3395aed&">
+    </video>
 
 """
 # hot=1 if hot='yes' else 0
@@ -46,7 +43,6 @@ with col3:
     road=st.text_input("mainroad",placeholder="type 0 for no and 1 for yes")
 #[area,bedrooms,stories,mainroad,guestroom,basement,hotwaterheating,¶
 #airconditiomning,parking,,prefarea,furnishingstatus---independent--x]
-li=[bed,bath,story,guest,base,hot,air,park,pref,furnish,road]
 # st.write(li)
 
 
@@ -64,6 +60,7 @@ try:
     pref = int(pref)
     furnish = int(furnish)
     road = int(road)
+    li=[bed,bath,story,guest,base,hot,air,park,pref,furnish,road]
 except ValueError:
     st.error("Please make sure all inputs are valid numbers.")
 
@@ -98,9 +95,14 @@ scaler.fit(df[["area"]])
 
 if st.button("View"):
     val=scaler.transform([[area]])
-    st.write(val)
-    li.append(val)
+    # st.write(val[0][0])
+    li.insert(0,val[0][0])
+    # st.write(li)
+
+    arr= np.array(li)
+    st.write(arr)
+    # li.append(val)
     model=joblib.load('house_price_1.pkl')
-    answer=model.predict(li)
-    st.subheader(f"Price of the House is - {answer[0]}")
+    answer=model.predict([arr])
+    st.subheader(f"Price of the House is : {answer[0]}")
 
