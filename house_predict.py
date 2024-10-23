@@ -45,7 +45,7 @@ with col3:
 #airconditiomning,parking,,prefarea,furnishingstatus---independent--x]
 # st.write(li)
 
-
+li=[]
 # Convert inputs to numeric (integer or float)
 try:
     area = float(area)
